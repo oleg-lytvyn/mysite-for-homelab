@@ -10,8 +10,16 @@ def post_list(request):
     # Pagination with 3 posts per page
     paginator = Paginator(posts_list, 3) # 3 posts in each page
     page_number = request.GET.get('page', 1)
-    posts = paginator.page(page_number)
-    return render(request, 'blog/post/list.html', {'posts': posts})
+    try:
+        posts = paginator.page(page_number)
+    except PageNotAnInteger:
+        # If page_number is not an integer get the first page
+        posts = paginator.page(1)
+    return render(
+        request,
+        'blog/post/list.html', 
+        {'posts': posts}
+        )
 
 
 def post_detail(request, year, month, day, post):
